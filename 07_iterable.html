@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>   
+  <title>Document</title>
+</head>
+<body>
+
+  <!-- 1. 배열 요소를 이용해 여러 개의 엘리먼트 작성하기 -->
+  <div id="root1"></div>
+  <script type="text/babel">
+
+    const numbers = [10, 20, 30, 40, 50];
+
+    function NumberComp({numbers}) {
+      const liItems = numbers.map(number => <li>{number}</li>);
+      return (
+        <ul>{liItems}</ul>
+      )
+    }
+
+    ReactDOM.createRoot(document.getElementById('root1')).render(<NumberComp numbers={numbers}/>)
+
+    /*
+      실행 결과
+      이 코드를 실행하면 리스트의 각 항목에 key를 추가해야 한다는 경고가 나타납니다.
+
+      key
+      리액트에서 key는 컴포넌드 배열을 rendering 했을 때 어떤 요소에 변경이 이쓴지 알아내기 위해 사용하는 식별자 역할을 수행합니다.
+      key가 존재하는 경우 빠르게 어떤 요소에 변화가 일어났느지 감지할 수 있습니다.
+      또한 key를 이용해 해당 요소를 추출할 수 있습니다.
+      key로 사용하기 적절한 값은 DB에서 초회한 데이터의 PK값입니다.
+    */
+
+  </script>
+  <hr/>
+
+
+  <!-- 2. key 속성을 등록한 여러 엘리먼트 생성하기 -->
+  <div id="root2"></div>
+  <script type="text/babel">
+
+  const items = [10, 20, 30, 40, 50];
+
+  function ItemComp({items}) {
+    // 리스트의 각 항목에  key 속성을 부여하되, 중복 값을 부여하면 안됩니다.
+    const liItems = items.map((item, index) => <li key={index}>{item}</li>);
+
+    return (
+      <ul>
+        {liItems}
+      </ul>
+    )
+  }
+
+  ReactDOM.createRoot(document.getElementById('root2')).render(<ItemComp items={items}/>)
+  </script>
+  <hr/>
+
+
+  <!-- 3. key 속성을 등록한 여러 컴포넌트 생성하기  -->
+  <div id="root3"></div>
+  <script type="text/babel">
+
+    // <li> 엘리먼트를 반환하는 LiComp 컴포넌트
+    function LiComp({name}) {
+      return <li>{name}</li>
+    }
+
+    // LiComp 컴포넌트를 여러 개 상성하는 UlComp 컴포넌트
+    function UlComp({names}) {
+      return (
+        <ul>
+        { names.map((name, index) => <LiComp key={index} name={name} />)}
+        </ul>
+      )
+    }
+
+    // UlComp 컴포넌트에 배열 전달하기 (LiComp 컴포넌트 제작에 필요한 배열)
+    const names = ['alice', 'john', 'tommy', 'jessica', 'ralph'];
+    ReactDOM.createRoot(document.getElementById('root3')).render(<UlComp names={names}/>)
+
+  </script>
+  <hr/>
+
+
+  <div id="root4"></div>
+  <script type="text/babel">
+
+    function JobComp() {
+
+      // state를 객체 배열로 생성
+      const {useState} = React;
+      const [jobs, setJobs] = useState([
+        {id: 1, jobname: '개발자'}, 
+        {id: 2, jobname: '변호사'}
+      ]);
+  
+      // id가 사용하는 state
+      const [id, setId] = useState(jobs.length + 1);  // 새로 등록할 id의 초기값은 3입니다.
+  
+      // job이 사용하는 state
+      const [jobname, setJob] = useState('');
+
+      // 입력된 직업이 state jobname 에 저장되는 이벤트 핸들러
+      const onChangHandler = (e) => {
+        setJob(e.target.value);
+      }
+
+      // Add 버튼을 클릭하면 동작하는 이벤트 핸들러
+      const onClickHandler = () => {
+        const newjob = {
+          id: id,
+          jobname: jobname
+        }
+        // 새로운 jobs 등록 후 다음 에 등록할 직업의 id와 jobname 초기화
+        setJobs(jobs.concat(newjob));
+        setId(id+1);
+        setJob('');
+      }
+
+      // 전달되 job의 id를 가진 직업을 삭제하는 함수
+      function removeJob(id) {
+        setJobs(jobs.filter(job => { return job.id !== id }));
+      }
+
+      // return
+      return (
+        <>
+          <input type="text" placeholde="직접 입력" value={jobname} onChange={onChangHandler}/>
+          <button type="button" onClick={onClickHandler}>Add</button>
+          <ul>
+            { jobs.map(job => <li key={job.id} onDoubleClick={() => { removeJob(job.id) }}>{job.jobname}</li>) }
+          </ul>
+        </>
+      )
+    }
+
+    ReactDOM.createRoot(document.getElementById('root4')).render(<JobComp/>)
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

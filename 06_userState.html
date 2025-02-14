@@ -41,5 +41,49 @@
     ReactDOM.createRoot(document.getElementById('root1')).render(<UseStateComp1/>)
 
   </script>
+
+
+  <div id="root2"></div>
+  <script type="text/babel">
+
+    function UseStateComp2() {
+
+      const { useState } = React;
+
+      const [id, setId] = useState('');
+      const [password, setPassword] = useState('');
+
+      const onSubmitHandler = (e) => {
+        // 아이디나 비밀번호가 입력되지 않았다면 서브밋 취소하기
+        if(id === '' || password === '') {
+          alert('아이디와 비밀번호를 모두 입력해야 합니다.');
+          e.preventDefault(); 
+        } else {
+          alert(id + ', ' +password)
+        }
+      }
+
+      return (
+        <form onSubmit={onSubmitHandler}>
+          <input type="text" placeholder="아이디" onChange={(e) => { setId(e.target.value); }} />
+          <br/>
+          <input type="text" placeholder="비밀번호" onChange={(e) => { setPassword(e.target.value); }} />
+          <br/>
+          <button type="submit">제출</button>
+        </form>
+      )
+
+    }
+
+    ReactDOM.createRoot(document.getElementById('root2')).render(<UseStateComp2/>)
+
+  </script>
+
+
+
+
+
+
+
 </body>
 </html>
