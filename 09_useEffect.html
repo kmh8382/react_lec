@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>   
+  <title>Document</title>
+</head>
+<body>
+  
+  <!--
+    React.useEffect()
+
+    1. 렌더링 이후에 수행할 내용을 처리하는 훅(Hooks) 입니다.
+    2. componentDidMount(), componentDidUpdate() 메소드를 대체할 수 있습니다.
+    3. 형식
+      1) undefined를 반환 합니다. (반환 없음)
+      2) React.useEffect(setup, dependencise?)
+        (1) setup
+          - 동작할 함수입니다.
+        (2) dependencise
+          - 필수가 아닌 선택 인자입니다.
+          - 의존성 배열이라고 합니다.
+          - setup 함수에서 사용하는 모든 반응형 값(props, state, 변수, 함수 등)이 포함될 수 있습니다.
+          - dependencise가 없는 경우            : setup 함수가 초기렌더링, 리렌더링 모두 동작합니다.
+          - dependencise가 비어 있는 배열인 경우 : setup 함수가 초기렌더링에서만 동작합니다. (한 번만 실행)
+          - dependencise가 값을 가진 배열인 경우 : 가지고 있는 값이 변하면 setup 함수가 리렌더링에서 동작합니다.
+    4. 
+  -->
+    <div id="root1"></div>
+    <script type="text/babel">
+
+      function UseEffectComp1() {
+
+        const { useState, useEffect } = React;
+
+        const [ now, setNow ] = useState('');
+
+        //          setup함수, dependencise
+        // useEffect(() => {}, []);
+
+        // dependencise가 없는 경우 초기렌더링과 리렌더링 이후에(return 이후에) 모두 동작합니다.
+        useEffect(() => {
+          console.log('useEffect');
+        });
+
+        // Now 버튼 글릭 이벤트 핸들러
+        const onClickHandler = () => {
+          console.log('onClickHandler');
+          // state 값의 변경으로 리렌더링을 수행합니다.
+          setNow(new Date().toTimeString());
+        }
+
+        return (
+          <>
+            <div>dependencise가 없으면 useEffect의 setup함수가 모든 렌더링에서 동작합니다.</div>
+            <button onClick={onClickHandler}>Now</button>
+            <h1>{now}</h1>
+          </>
+        )
+
+      }
+
+      // ReactDOM.createRoot(document.getElementById('root1')).render(<UseEffectComp1/>);
+
+    </script>
+
+
+  <div id="root2"></div>
+  <script type="text/babel">
+
+    function UseEffectComp2() {
+
+      const { useState, useEffect } = React;
+
+      const [ now, setNow ] = useState('');
+
+      // dependencise가 비어 있는 배열인 경우
+      useEffect(() => {
+        console.log('useEffect');
+      }, []);
+
+      // Now 버튼 글릭 이벤트 핸들러
+      const onClickHandler = () => {
+        console.log('onClickHandler');
+        // state 값의 변경으로 리렌더링을 수행합니다.
+        setNow(new Date().toTimeString());
+      }
+
+      return (
+        <>
+          <div>dependencise가 비어 있는 배열이면 useEffect의 setup함수가 초기 렌더링에서 동작합니다.</div>
+          <button onClick={onClickHandler}>Now</button>
+          <h1>{now}</h1>
+        </>
+      )
+
+    }
+
+    // ReactDOM.createRoot(document.getElementById('root2')).render(<UseEffectComp2/>);
+
+  </script>
+
+
+  <div id="root3"></div>
+  <script type="text/babel">
+
+    function UseEffectComp3() {
+
+      const { useState, useEffect } = React;
+
+      const [ person, setPerson ] = useState({
+        name: ' ',
+        age: 0,
+      });
+
+      useEffect(() => {
+        if(person.name === '') {
+          alert('이름은 필수입니다.');
+        }
+      }, [person.name]);  // 초기 렌더링과 person.name이 변할때만 useEffect이 동작합니다.
+
+      useEffect(() => {
+        if(person.age < 0 || person.age > 100) {
+          alert('잘못된 나이입니다.');
+        }
+      }, [person.age]);  // 초기 렌더링과 person.age가 변할때만 useEffect이 동작합니다.
+
+      const onChangeHandler = (e) => {
+        
+        setPerson({
+
+          // 1. person 객체가 가진 값을 그대로 사용합니다.
+          ...person,
+          /* name: person.name,
+          age: person.age, */
+
+          // 2. change 이벤트가 동작하는 입력 내용(내용이 바뀐 것)만 덮어쓰기 합니다.
+          [e.target.id]: e.target.value,  // ['name']: e.target.value 또는 ['age']: e.target.value
+          /* name: e.target.value,
+          age: e.target.value, */
+
+        })
+
+      }
+
+      return (
+        <div>
+          <input type="text" id="name" placeholder="이름" onChange={onChangeHandler} />
+          <br/>
+          <input type="text" id="age" placeholder="나이" onChange={onChangeHandler} />
+          <br/>
+          <div>name: {person.name}</div>
+          <div>age: {person.age}</div>
+        </div>
+      )
+
+    }
+
+    // ReactDOM.createRoot(document.getElementById('root3')).render(<UseEffectComp3/>);
+
+  </script>
+
+
+  <div id="root4"></div>
+  <script type="text/babel">
+
+    // useEffect()의 setup 함수는 cleanup 함수를 반환할 수 있습니다.
+    // 주로 setup 함수가 사용한 자원의 정리를 하기 떄문에 cleanup 이라고 부릅니다.
+
+    function UseEffectComp4() {
+
+      const { useEffect } = React;
+
+      useEffect(() => {
+
+        // 수행할 작업
+        console.log('BEGIN!');
+        const watch = setInterval(() => {
+          console.log(new Date().toLocaleTimeString())
+        }, 1000);
+
+        // cleanup 함수 반환
+        return () => {
+          clearInterval(watch);
+          console.log('END!!!');
+        }
+
+      }, []);   // 비어 있는 배열 : 초기 렌더링에서만 동작합니다.
+
+      return (
+        <div>console 확인 요망</div>
+      )
+
+    }
+
+    function StopNGO() {
+
+      const { useState } = React;
+
+      const [isOn, setIsOn] = useState(false);
+
+      return (
+        <>
+          <button onClick={() => { setIsOn(!isOn); }}>토글스위치</button>
+          {isOn ? <UseEffectComp4/> : null}
+        </>
+        
+      )
+
+    }
+
+    // ReactDOM.createRoot(document.getElementById('root4')).render(<StopNGO/>);
+
+  </script>
+
+
+  <div id="root5"></div>
+  <script type="text/babel">
+
+    const { useState, useEffect } = React;
+
+    function Typing({ text, setIsDone }) {
+
+      // 사용자가 입력한 값을 저장하는 state
+      const [ input, setInput ] = useState('');
+
+      //  시간을 재는 useEffect
+      useEffect(() => {
+        // 초기 렌더링할 때 시간을 기록해 둠
+        const begin = new Date().getTime();
+        
+        // Typing 컴포넌트의 렌더링이 끝날 때 시간을 기록해서 얼마나 시간이 지났는지 체크
+        return () => {
+          const end =  new Date().getTime();
+            alert((end - begin) + "ms");
+        }
+      }, []);
+
+      // 사용자가 입력한 값을 input에 저장하는 onChangeHandler
+      const onChangeHandler = (e) => {
+        setInput(e.target.value);
+      }
+
+      // Enter를 누르면 input과 text가 동일한지 비교하는 onKeyPressHandler
+      const onKeyPressHandler = (e) => {
+        if(e.key === 'Enter') {
+          setIsDone(input === text);
+        }
+      }
+
+      return (
+        <>
+          <h1>{text}</h1>
+          <input type="text" size="100" placeholder="Try" 
+                onChange={onChangeHandler} 
+                onKeyPress={onKeyPressHandler}
+                value={input}/>
+        </>
+      )
+    }
+
+    function TypingApp() {      
+
+      // 화면에 표시할 랜덤 스트링을 저장하는 State
+      const [text, setText] = useState('');
+
+      // 사용자가 랜덤 스트링을 올바르게 모두 입력했는지 여부를 저장하는 state
+      const [ isDone, setIsDone ] = useState(false);
+
+      // Typing 컴포넌트 화면에 표시할 것인지 여부를 저장하는 state
+      const [ visible, setVisible ] = useState(false);
+
+      // 초기렌더링에서 랜덤 스트링을 출력하기 위한 useEffect
+      useEffect(() => {
+        //setText(crypto.randomUUID());   // 36자로 구성된 Level4 UUID 생성
+        setText(crypto.randomUUID().split('-')[0]);
+      }, []);
+
+      // 초기 렌더링 시 visible 값을 true로 설정
+      // 이후 isDone 이 변경되면(isDone이 true가 되면) visible 값을 반대로 설정(visible 값을 false로 설정)
+      useEffect(() => {
+        setVisible(!visible);
+      }, [isDone]);
+
+      return (
+        <>
+          { visible ? <Typing text={text} setIsDone={setIsDone} /> : null }
+        </>
+      )
+
+    }
+
+    ReactDOM.createRoot(document.getElementById('root5')).render(<TypingApp/>);
+
+  </script>
+
+
+</body>
+</html>
