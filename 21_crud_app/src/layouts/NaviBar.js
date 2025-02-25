@@ -6,9 +6,9 @@ const NaviBar = () => {
     <div>
       <nav>
         <ul>
-          <li><NavLink to="/blog">블로그</NavLink></li>
-          <li><NavLink to="/blog">블로그</NavLink></li>
-          <li><NavLink to="/blog">블로그</NavLink></li>
+          <li><NavLink to="/blog/list">블로그</NavLink></li>
+          <li><NavLink to="/blog/regist">블로그</NavLink></li>
+          <li><NavLink to="/blog/list">블로그</NavLink></li>
         </ul>
       </nav>
     </div>
