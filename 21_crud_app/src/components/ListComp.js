@@ -21,7 +21,6 @@ const ListComp = () => {
   const sort = !queryParams.get('sort') ? 'id,desc' : queryParams.get('sort');
 
   useEffect(() => {
-//=- 외부 함수로 옴김
     // const getBlogList = async () => {
     //   const response = await axios({
     //     url: 'http://localhost:8080/blogs',
@@ -45,7 +44,6 @@ const ListComp = () => {
       })
   }, [page, size, sort]);   // page, size, sort가 변경되면 리렌더링합니다.
 
-//=- 외부 함수로 옴김  
   // // 페이지 이동하는 useNavigate()
   // const navigate = useNavigate();
 

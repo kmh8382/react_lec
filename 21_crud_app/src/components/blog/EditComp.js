@@ -14,7 +14,6 @@ const EditComp = ({ id }) => {
 
   // 최초 렌더링 and id가 변하면 서버에 상세 정보를 요청
   useEffect(() => {
-//=- 외부 함수로 옴김    
     const getBlog = async () => {
       const response = await axios.get(`http://localhost:8080/blogs/${id}`);
       const jsondata = await response.data;
@@ -52,7 +51,6 @@ const EditComp = ({ id }) => {
     const jsonData = response.data;
     // console.log(jsonData);
     window.alert(jsonData.message);
-//=- 외부 함수로 옴김    
     navigate({
       pathname: `/blog/detail/${id}`,
     });
@@ -66,7 +64,6 @@ const EditComp = ({ id }) => {
     const response = await axios.delete(`http://localhost:8080/blogs/${id}`, blog);
     const jsonData = response.data;
     window.alert(jsonData.message);
-//=- 외부 함수로 옴김    
     navigate({
       pathname: `/blog/list`,
     });

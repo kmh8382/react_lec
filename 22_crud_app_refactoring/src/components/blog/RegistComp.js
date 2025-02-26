@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { registBlog } from '../../api/blogAPI';
+import CustomNavigate from '../../hooks/CustomNavigate';
 
 const RegistComp = () => {
 
-  const navigate = useNavigate();
+  // 페이지 이동 함수
+  const { goToListPage } = CustomNavigate();
 
-  const initialBlog = {
+  // blog 객체 선언 (등록 시 title, content만 전달)
+  const [ blog, setBlog ] = useState({
     title: '',
-    content: "",
-  }
-  const[ blog, setBlog ] = useState(initialBlog);
+    content: '',
+  });
 
+  // onChangeHandler() : 사용자가 title, content에 입력한 내용을 blog 객체에 저장
   const onChangeHandler = e => {
     setBlog({
       ...blog,
@@ -19,20 +21,13 @@ const RegistComp = () => {
     })
   }
 
+  // onClickHandler() : 블로그 저장
   const onClickHandler = async () => {
-    const response = await axios({
-      url: 'http://localhost:8080/blogs',
-      method: 'post',
-      data: blog,
-    });
-    const jsondata = await response.data;
-    // console.log(jsondata);
-    alert(jsondata.message);
-    setBlog(initialBlog);
-    navigate({
-      pathname: "/blog/list",
-    })
-
+    registBlog(blog)
+      .then(jsonData => {
+        alert(jsonData.message);
+        goToListPage();
+      })
   }
 
   return (
@@ -44,6 +39,7 @@ const RegistComp = () => {
       <button onClick={onClickHandler}>등록하기</button>
     </div>
   );
+
 };
 
 export default RegistComp;
