@@ -20,6 +20,7 @@ const RegistComp = () => {
   }
 
   const onClickHandler = async () => {
+//=- 외부 함수로 옴김    
     const response = await axios({
       url: 'http://localhost:8080/blogs',
       method: 'post',
@@ -29,6 +30,7 @@ const RegistComp = () => {
     // console.log(jsondata);
     alert(jsondata.message);
     setBlog(initialBlog);
+//=- 외부 함수로 옴김    
     navigate({
       pathname: "/blog/list",
     })

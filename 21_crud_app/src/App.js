@@ -3,6 +3,8 @@ import BasicLayout from "./layouts/BasicLayout";
 import IndexPage from "./pages/IndexPage";
 import ListPage from "./pages/blog/ListPage";
 import RegistPage from "./pages/blog/RegistPage";
+import DetailPage from "./pages/blog/DetailPage";
+import EditPage from "./pages/blog/EditPage";
 
 function App() {
   return (
@@ -10,9 +12,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<BasicLayout/>}>
-            <Route path="/" element={<IndexPage/>}/>
-            <Route path="/blog/list" element={<ListPage/>}/>
-            <Route path="/blog/regist" element={<RegistPage/>}/>
+            <Route path="/"                element={<IndexPage/>}/>
+            <Route path="/blog/list"       element={<ListPage/>}/>
+            <Route path="/blog/regist"     element={<RegistPage/>}/>
+            <Route path="/blog/detail/:id" element={<DetailPage/>}/>
+            <Route path="/blog/edit/:id"   element={<EditPage/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
