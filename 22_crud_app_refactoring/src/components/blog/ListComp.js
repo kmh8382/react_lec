@@ -2,18 +2,21 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getBlogList } from '../../api/blogAPI';
 import CustomNavigate from '../../hooks/CustomNavigate';
+import PageComp from '../common/PageComp';
 
 const ListComp = () => {
 
   // 페이지 이동 함수
-  const { goToDetailPage } = CustomNavigate();
+  const { goToDetailPage, goToListPage } = CustomNavigate();
 
   // serverData 객체 선언
   const [serverData, setServerData] = useState({
     status: 0,
     message: '',
     results: {
-      blogList: []
+      blogList: [],
+      pageList: [],
+      pageDto: {},
     }
   })
 
@@ -27,6 +30,7 @@ const ListComp = () => {
   useEffect(() => {
     getBlogList({ page, size, sort })
       .then(jsonData => {
+        console.log(jsonData);
         setServerData(jsonData);
       })
   }, [page, size, sort]);
@@ -54,6 +58,13 @@ const ListComp = () => {
             )
           }
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={2}>
+              <PageComp serverData={serverData} goToListPage={goToListPage} size={size} sort={sort}/>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );
